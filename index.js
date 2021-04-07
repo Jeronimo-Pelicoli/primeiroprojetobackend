@@ -1,51 +1,85 @@
 const express = require('express');
 const cors = require('cors');
+const sqlite3 = require('sqlite3').verbose();
 
 const app = express();
+
 
 app.use(express.json());
 app.use(cors());
 
-const projects = [
-    {"id": 1, "title": "aprendendo apinodejs", "description": "fazendo nossa primeira api em nodejs"},
-    {"id": 2, "title": "aprendendo reactjs", "description": "fazendo nossa primeira interface com reactjs"},
-    {"id": 3, "title": "aprendendo a conectar o font com o back", "description": "fazendo nossa primeira comunicação do frontend com o backend"}
-];
+let db = new sqlite3.Database("./database/Db.sqlite", (err) => {
+    if(err) {
+      console.log("not connect to database", err)
+    } else {
+      db.run(`CREATE TABLE IF NOT EXISTS users (
+        id INTEGER PRIMARY KEY,
+        title TEXT,
+        description TEXT
+      )`, (err, row) => {
+        if(err) {
+          throw err
+        }
+        console.log("Table create")
+    })
+  }})
 
 app.get('/proj', (req, res) => {
-    return res.json(projects);
+    db.all("SELECT * FROM users" , [], (err, rows) => {
+      if(err) {
+        console.log('error', err.message)
+      } else {
+        return res.json(rows)
+      }
+    })
 });
 
+app.get('/proj/:id', (req, res ) => {
+  const { id } = req.params
+  db.all("SELECT id, title, description FROM users WHERE id = ?" , [id], (err, rows) => {
+    if(err) {
+      console.log('error', err.message)
+    } else {
+      return res.json(rows)
+    }
+  })
+})
+
 app.post('/proj', (req, res) => {
-    const { id, title, description } = req.body;
-    project = { id, title, description };
-    projects.push(project);
-    return res.json(project);
+    const { id, title, description } = req.body
+    db.run(`INSERT INTO users(id, title, description) VALUES(?, ?, ?)`, [id, title, description], err => {
+      if(err){
+        console.log('error', err.message)
+      } else {
+        return res.status(200).send()
+      }
+    })
 })
 
 app.put('/proj/:id', (req, res) => {
-    const { id } = req.params;
-    const { title, description} = req.body;
+    const { id } = req.params
+    const { title, description} = req.body
     
-    const projIndex = projects.findIndex(project => project.id == id);
-    if(projIndex < 0 ) {
-        return res.status(400).send('Project not found');
-    }
-    const project = { id , title, description };
-    projects[projIndex] = project;
-    return res.json(projIndex);
+    db.run(`UPDATE users SET title = ?, description = ? WHERE id = ?`, [title, description, id], err => {
+      if(err) {
+        console.log("erro: ", err.message)
+      } else {
+        return res.status(200).send()
+      }
+    })
 })
 
 app.delete('/proj/:id', (req, res) => {
     const { id } = req.params;
-    const { title, description} = req.body;
     
-    const projIndex = projects.findIndex(project => project.id == id);
-    if(projIndex < 0 ) {
-        return res.status(400).send('Project not found');
-    }
-    projects.splice(projIndex, 1);
-    res.status(200).send(projects);
+    db.run(`DELETE FROM users WHERE id = ?`, [id], err => {
+      if(err) {
+        console.log("erro: ", err.message)
+      } else {
+        return res.status(200).send()
+      }
+    })
 })
+
 
 app.listen(8080);
