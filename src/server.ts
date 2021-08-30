@@ -1,13 +1,12 @@
-import express from 'express';
-import cors from 'cors';
-import { routes } from './routes';
-import './database';
+import "reflect-metadata";
+import express from "express";
+
+import {router } from "./router";
+import "./database";
 
 const app = express();
-
 app.use(express.json());
-app.use(cors());
 
-app.use(routes);
+app.use(router);
 
-app.listen(8080, () => {console.log("pronto")});
+app.listen(3000, () => console.log("server is run"));

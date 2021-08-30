@@ -1,25 +1,29 @@
 {
-  "name": "primerioprojetobanckend",
+  "name": "primeiroprojetobackend",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
+  "repository": "https://github.com/Jeronimo-Pelicoli/primeiroprojetobackend.git",
+  "author": "Jeronimo-Pelicoli <jeronimosama@gmail.com>",
+  "license": "MIT",
   "scripts": {
     "dev": "ts-node-dev src/server.ts",
-    "typeorm": "ts-node-dev node_modules/typeorm/cli.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "cors": "^2.8.5",
-    "express": "^4.17.1",
-    "sqlite3": "^5.0.2",
-    "ts-node-dev": "^1.1.6",
-    "typeorm": "^0.2.32",
-    "typescript": "^4.2.4"
+    "typeorm": "ts-node-dev node_modules/typeorm/cli.js"
   },
   "devDependencies": {
-    "@types/express": "^4.17.11"
+    "@types/bcryptjs": "^2.4.2",
+    "@types/express": "^4.17.13",
+    "@types/jsonwebtoken": "^8.5.5",
+    "@types/uuid": "^8.3.1",
+    "ts-node-dev": "^1.1.8",
+    "typescript": "^4.4.2"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "reflect-metadata": "^0.1.13",
+    "sqlite3": "^5.0.2",
+    "typeorm": "^0.2.37",
+    "uuid": "^8.3.2"
   }
 }
